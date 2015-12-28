@@ -62,12 +62,12 @@ public class FeedForwardNeuralNetwork implements NeuralNetwork
     public double[] predict(double[][] inputs, double bias)
     {
         Layer layer0 = layers.get(0);
-        double[][] layerInputs = {layer0.process(inputs, bias)};
+        double[][] layerInputs = {layer0.process(inputs)};
 
         for (int l = 1; l < numberOfLayers; l++)
         {
             Layer layer = layers.get(l);
-            layerInputs[0] = layer.process(layerInputs, bias);
+            layerInputs[0] = layer.process(layerInputs);
         }
         return layers.get(numberOfLayers - 1).getOutput();
     }

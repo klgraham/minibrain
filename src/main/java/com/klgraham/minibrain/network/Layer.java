@@ -6,6 +6,7 @@ import com.klgraham.minibrain.neuron.Neuron;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 /**
@@ -38,6 +39,10 @@ public class Layer
      */
     int numberOfFeatures;
 
+    private double bias;
+    private Random r = new Random();
+    private double epsilon = 1.0e-4;
+
     ActivationFunction f;
     private double[] output;
 
@@ -64,8 +69,9 @@ public class Layer
 
         IntStream.rangeClosed(1, numberOfNeurons).forEach(i -> {
             Neuron n = new Neuron(f);
-            n.initRandom(numberOfInputs, numberOfFeatures);
+            n.init(numberOfInputs, numberOfFeatures);
             layer.neurons.add(n);
+            layer.bias = layer.epsilon * layer.r.nextGaussian();
         });
         return layer;
     }
@@ -101,7 +107,7 @@ public class Layer
      * @param inputs
      * @return
      */
-    public double[] process(double[][] inputs, final double bias)
+    public double[] process(double[][] inputs)
     {
         double[] outputs = new double[numberOfNeurons];
         IntStream.range(0, numberOfNeurons).forEach(i -> {
@@ -132,7 +138,7 @@ public class Layer
         {
             n.weights = weights;
         }
-        layer.process(inputs, bias);
+        layer.process(inputs);
         for (double d : layer.getOutput())
         {
             System.out.println(d);
