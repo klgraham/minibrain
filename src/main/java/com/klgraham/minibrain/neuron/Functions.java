@@ -1,4 +1,4 @@
-package com.digitalreasoning.minibrain.neuron;
+package com.klgraham.minibrain.neuron;
 
 import java.util.function.Function;
 

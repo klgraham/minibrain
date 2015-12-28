@@ -1,4 +1,4 @@
-package com.digitalreasoning.minibrain.perceptron;
+package com.klgraham.minibrain.perceptron;
 
 import Jama.Matrix;
 
