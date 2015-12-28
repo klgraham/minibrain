@@ -12,6 +12,7 @@ public class Neuron
 {
     public double[] weights;
     public double bias;
+    private double output;
     private Function<Double, Double> f;
 
     public Neuron(double[] w, double bias, ActivationFunction f)
@@ -35,9 +36,10 @@ public class Neuron
         return w.times(x.transpose()).trace() + bias;
     }
 
-    public double output(double[] inputs)
+    public double process(double[] inputs)
     {
-        return f.apply(z(inputs));
+        output = f.apply(z(inputs));
+        return output;
     }
 
     public static void main(String[] args)
@@ -46,8 +48,12 @@ public class Neuron
         double[] weights = {6, 2, 2};
         double bias = 10;
         Neuron neuron = new Neuron(weights, bias, ActivationFunction.SIGMOID);
-        double output = neuron.output(inputs);
-        System.out.println(output);
+        neuron.process(inputs);
+        System.out.println(neuron.getOutput());
+    }
+
+    public double getOutput() {
+        return output;
     }
 
     public void init(int n)
