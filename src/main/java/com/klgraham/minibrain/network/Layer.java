@@ -53,14 +53,14 @@ public class Layer
      * @param numberOfNeurons
      * @param numberOfInputs
      * @param numberOfFeatures
-     * @param f
+     * @param f Activatin function
      * @return Layer of neurons
      */
     public static Layer build(final int numberOfNeurons, final int numberOfInputs, final int numberOfFeatures, ActivationFunction f)
     {
         Layer layer = new Layer(numberOfNeurons, numberOfInputs, numberOfFeatures, f);
 
-        IntStream.range(1, numberOfNeurons).forEach(i -> {
+        IntStream.rangeClosed(1, numberOfNeurons).forEach(i -> {
             Neuron n = new Neuron(f);
             n.initRandom(numberOfInputs, numberOfFeatures);
             layer.neurons.add(n);
