@@ -5,7 +5,8 @@ import Jama.Matrix;
 /**
  * Created by klogram on 12/27/15.
  */
-public class Perceptron {
+public class Perceptron
+{
     // binary inputs x_0, ..., x_{N-1}
     public double[] inputs; // only one row exists
 
