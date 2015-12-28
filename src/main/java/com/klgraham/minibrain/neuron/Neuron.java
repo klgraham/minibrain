@@ -11,14 +11,13 @@ public class Neuron
 {
     public double[] weights;
     public double bias;
-
     private Function<Double, Double> f;
 
-    public Neuron(double[] w, double bias, Function<Double, Double> f)
+    public Neuron(double[] w, double bias, ActivationFunction f)
     {
         this.weights = w;
         this.bias = bias;
-        this.f = f;
+        this.f = f.get();
     }
 
     private double z(double[] inputs)
@@ -38,7 +37,7 @@ public class Neuron
         double[] inputs = {1, 0, 1};
         double[] weights = {6, 2, 2};
         double bias = 10;
-        Neuron neuron = new Neuron(weights, bias, Functions.sigmoid);
+        Neuron neuron = new Neuron(weights, bias, ActivationFunction.SIGMOID);
         double output = neuron.output(inputs);
         System.out.println(output);
     }
