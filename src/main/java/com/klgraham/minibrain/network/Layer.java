@@ -14,6 +14,10 @@ import java.util.stream.IntStream;
  */
 public class Layer
 {
+    /**
+     * Description of the layer.
+     */
+    private String description = "";
     List<Neuron> neurons;
     double biasUnit = 1.0;
 
@@ -66,6 +70,32 @@ public class Layer
     }
 
     /**
+     * Returns a description of the layer.
+     * @return
+     */
+    public String getDescription() {
+        if (!description.isEmpty())
+        {
+            return description;
+        }
+        else
+        {
+            return "Layer{neurons: " + numberOfNeurons +
+                    ", activation: " + f.name() +
+                    ", features: " + numberOfFeatures +
+                    ", inputs: " + numberOfInputs + "}";
+        }
+    }
+
+    /**
+     * Sets the description of the layer.
+     * @param description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
      * Computes the output of the entire layer.
      * @param inputs
      * @return
@@ -78,5 +108,10 @@ public class Layer
             outputs[i] = n.process(inputs);
         });
         return outputs;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription();
     }
 }
