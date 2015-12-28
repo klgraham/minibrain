@@ -2,6 +2,7 @@ package com.klgraham.minibrain.neuron;
 
 import Jama.Matrix;
 
+import java.util.Random;
 import java.util.function.Function;
 
 /**
@@ -18,6 +19,13 @@ public class Neuron
         this.weights = w;
         this.bias = bias;
         this.f = f.get();
+    }
+
+    public Neuron(double bias, ActivationFunction f)
+    {
+        this.bias = bias;
+        this.f = f.get();
+        this.weights = null;
     }
 
     private double z(double[] inputs)
@@ -40,5 +48,25 @@ public class Neuron
         Neuron neuron = new Neuron(weights, bias, ActivationFunction.SIGMOID);
         double output = neuron.output(inputs);
         System.out.println(output);
+    }
+
+    public void init(int n)
+    {
+        this.weights = new double[n];
+        for (int i = 0; i < n; i++)
+        {
+            weights[i] = 0.0;
+        }
+    }
+
+    private Random r = new Random();
+
+    public void initRandom(int n)
+    {
+        this.weights = new double[n];
+        for (int i = 0; i < n; i++)
+        {
+            weights[i] = r.nextDouble();
+        }
     }
 }
