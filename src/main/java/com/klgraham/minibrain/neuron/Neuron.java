@@ -9,31 +9,28 @@ import java.util.function.Function;
  */
 public class Neuron
 {
-    public double[] x;
-    public double[] w;
+    public double[] weights;
     public double bias;
-    public int numberOfInputs;
 
     private Function<Double, Double> f;
 
-    public Neuron(double[] x, double[] w, double bias, Function<Double, Double> f) {
-        this.x = x;
-        this.w = w;
+    public Neuron(double[] w, double bias, Function<Double, Double> f)
+    {
+        this.weights = w;
         this.bias = bias;
-        this.numberOfInputs = x.length;
         this.f = f;
     }
 
-    private double z()
+    private double z(double[] inputs)
     {
-        Matrix xx = new Matrix(x, 1);
-        Matrix ww = new Matrix(w, 1);
-        return ww.times(xx.transpose()).trace() + bias;
+        Matrix x = new Matrix(inputs, 1);
+        Matrix w = new Matrix(weights, 1);
+        return w.times(x.transpose()).trace() + bias;
     }
 
-    public double output()
+    public double output(double[] inputs)
     {
-        return f.apply(z());
+        return f.apply(z(inputs));
     }
 
     public static void main(String[] args)
@@ -41,8 +38,8 @@ public class Neuron
         double[] inputs = {1, 0, 1};
         double[] weights = {6, 2, 2};
         double bias = 10;
-        Neuron neuron = new Neuron(inputs, weights, bias, Functions.sigmoid);
-        double output = neuron.output();
+        Neuron neuron = new Neuron(weights, bias, Functions.sigmoid);
+        double output = neuron.output(inputs);
         System.out.println(output);
     }
 }
