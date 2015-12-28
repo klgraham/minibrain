@@ -95,4 +95,8 @@ public class Neuron
             }
         }
     }
+
+    public void setActivationFunction(ActivationFunction f) {
+        this.f = f.get();
+    }
 }
