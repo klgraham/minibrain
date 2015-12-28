@@ -7,23 +7,24 @@ import java.util.function.Function;
  */
 public enum ActivationFunction
 {
-    SIGMOID(0), STEP(1);
-
-    private final int functionCode;
-
-    ActivationFunction(int functionCode)
-    {
-        this.functionCode = functionCode;
-    }
+    SIGMOID, STEP;
 
     public Function<Double, Double> get()
     {
-        switch (functionCode)
+        Function<Double, Double> f;
+        switch (this)
         {
-            case 0: return Functions.sigmoid;
-            case 1: return Functions.step;
-            default: return Functions.sigmoid;
+            case SIGMOID:
+                f = sigmoid;
+                break;
+            case STEP:
+                f = step;
+                break;
+            default:
+                f = sigmoid;
+                break;
         }
+        return f;
     }
 
     Function<Double, Double> sigmoid = z -> 1.0 / (1.0 + Math.exp(-z));
