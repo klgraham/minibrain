@@ -18,7 +18,7 @@ public class Layer
      * Description of the layer.
      */
     private String description = "";
-    List<Neuron> neurons;
+    private List<Neuron> neurons;
 
     /**
      * Number of neurons in the layer.
@@ -56,14 +56,14 @@ public class Layer
      * @param f
      * @return Layer of neurons
      */
-    public Layer init(final int numberOfNeurons, final int numberOfInputs, final int numberOfFeatures, ActivationFunction f)
+    public static Layer build(final int numberOfNeurons, final int numberOfInputs, final int numberOfFeatures, ActivationFunction f)
     {
         Layer layer = new Layer(numberOfNeurons, numberOfInputs, numberOfFeatures, f);
 
         IntStream.range(1, numberOfNeurons).forEach(i -> {
             Neuron n = new Neuron(f);
             n.initRandom(numberOfInputs, numberOfFeatures);
-            neurons.add(n);
+            layer.neurons.add(n);
         });
         return layer;
     }
