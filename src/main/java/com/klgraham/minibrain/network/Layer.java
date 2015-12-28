@@ -1,5 +1,6 @@
 package com.klgraham.minibrain.network;
 
+import Jama.Matrix;
 import com.klgraham.minibrain.neuron.ActivationFunction;
 import com.klgraham.minibrain.neuron.Neuron;
 
@@ -38,6 +39,7 @@ public class Layer
     int numberOfFeatures;
 
     ActivationFunction f;
+    private double[] output;
 
     private Layer(final int numberOfNeurons, final int numberOfInputs, final int numberOfFeatures, ActivationFunction f)
     {
@@ -102,15 +104,38 @@ public class Layer
     public double[] process(double[][] inputs, final double bias)
     {
         double[] outputs = new double[numberOfNeurons];
-        IntStream.range(0, numberOfNeurons-1).forEach(i -> {
+        IntStream.range(0, numberOfNeurons).forEach(i -> {
             Neuron n = neurons.get(i);
             outputs[i] = n.process(inputs, bias);
         });
+        this.output = outputs;
         return outputs;
+    }
+
+    public double[] getOutput() {
+        return output;
     }
 
     @Override
     public String toString() {
         return getDescription();
+    }
+
+    public static void main(String[] args)
+    {
+        double[][] inputs = {{1, 0, 1}};
+        double[][] weights = {{6, 2, 2}};
+        double bias = 10;
+        Layer layer = Layer.build(4, 3, 1, ActivationFunction.SIGMOID);
+
+        for (Neuron n : layer.neurons)
+        {
+            n.weights = weights;
+        }
+        layer.process(inputs, bias);
+        for (double d : layer.getOutput())
+        {
+            System.out.println(d);
+        }
     }
 }

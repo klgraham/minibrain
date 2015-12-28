@@ -26,7 +26,6 @@ public class Neuron
      */
     private Function<Double, Double> f;
 
-
     public Neuron(double[][] w, ActivationFunction f)
     {
         this.weights = w;
@@ -74,8 +73,8 @@ public class Neuron
     public void init(final int numInputs, final int numFeatures)
     {
         this.weights = new double[numFeatures][numInputs];
-        for (int i = 0; i < numInputs; i++) {
-            for (int j = 0; j < numFeatures; j++) {
+        for (int i = 0; i < numFeatures; i++) {
+            for (int j = 0; j < numInputs; j++) {
                 weights[i][j] = 0.0;
             }
         }
@@ -86,8 +85,8 @@ public class Neuron
     public void initRandom(final int numInputs, final int numFeatures)
     {
         this.weights = new double[numFeatures][numInputs];
-        for (int i = 0; i < numInputs; i++) {
-            for (int j = 0; j < numFeatures; j++) {
+        for (int i = 0; i < numFeatures; i++) {
+            for (int j = 0; j < numInputs; j++) {
                 weights[i][j] = r.nextDouble();
             }
         }
