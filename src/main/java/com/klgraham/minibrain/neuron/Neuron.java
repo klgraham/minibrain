@@ -18,7 +18,6 @@ public class Neuron
      */
     public double[][] weights;
 
-    public double bias;
     private double output;
 
     /**
@@ -28,21 +27,19 @@ public class Neuron
     private Function<Double, Double> f;
 
 
-    public Neuron(double[][] w, final double bias, ActivationFunction f)
+    public Neuron(double[][] w, ActivationFunction f)
     {
         this.weights = w;
-        this.bias = bias;
         this.f = f.get();
     }
 
-    public Neuron(final double bias, ActivationFunction f)
+    public Neuron(ActivationFunction f)
     {
-        this.bias = bias;
         this.f = f.get();
         this.weights = null;
     }
 
-    private double z(final double[][] inputs)
+    private double z(final double[][] inputs, final double bias)
     {
         Matrix x = new Matrix(inputs);
         Matrix w = new Matrix(weights);
@@ -54,9 +51,9 @@ public class Neuron
      * @param inputs
      * @return Neuron's output value.
      */
-    public double process(final double[][] inputs)
+    public double process(final double[][] inputs, final double bias)
     {
-        output = f.apply(z(inputs));
+        output = f.apply(z(inputs, bias));
         return output;
     }
 
@@ -65,8 +62,8 @@ public class Neuron
         double[][] inputs = {{1, 0, 1}};
         double[][] weights = {{6, 2, 2}};
         double bias = 10;
-        Neuron neuron = new Neuron(weights, bias, ActivationFunction.SIGMOID);
-        neuron.process(inputs);
+        Neuron neuron = new Neuron(weights, ActivationFunction.SIGMOID);
+        neuron.process(inputs, bias);
         System.out.println(neuron.getOutput());
     }
 

@@ -19,7 +19,6 @@ public class Layer
      */
     private String description = "";
     List<Neuron> neurons;
-    double biasUnit = 1.0;
 
     /**
      * Number of neurons in the layer.
@@ -62,7 +61,7 @@ public class Layer
         Layer layer = new Layer(numberOfNeurons, numberOfInputs, numberOfFeatures, f);
 
         IntStream.range(1, numberOfNeurons).forEach(i -> {
-            Neuron n = new Neuron(0, f);
+            Neuron n = new Neuron(f);
             n.initRandom(numberOfInputs, numberOfFeatures);
             neurons.add(n);
         });
@@ -100,12 +99,12 @@ public class Layer
      * @param inputs
      * @return
      */
-    public double[] process(double[][] inputs)
+    public double[] process(double[][] inputs, final double bias)
     {
         double[] outputs = new double[numberOfNeurons];
         IntStream.range(0, numberOfNeurons-1).forEach(i -> {
             Neuron n = neurons.get(i);
-            outputs[i] = n.process(inputs);
+            outputs[i] = n.process(inputs, bias);
         });
         return outputs;
     }
