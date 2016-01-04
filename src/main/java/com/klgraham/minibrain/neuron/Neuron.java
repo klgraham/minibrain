@@ -26,6 +26,10 @@ public class Neuron
      */
     private double output;
 
+    private double z;
+    private double[] dJdW;
+    private double dJdb;
+
     /**
      * Activation function h_{w,b}(x),
      * where x = (x_0, ..., x_{N-1})
@@ -37,6 +41,9 @@ public class Neuron
         this.weights = w;
         this.bias = bias;
         this.f = f.get();
+        this.z = 0;
+        this.dJdW = new double[w.length];
+        this.dJdb = 0;
     }
 
     public Neuron(ActivationFunction f)
@@ -44,6 +51,8 @@ public class Neuron
         this.f = f.get();
         this.weights = null;
         this.bias = 1.0;
+        this.dJdW = null;
+        this.dJdb = 0;
     }
 
 	/**
@@ -65,9 +74,15 @@ public class Neuron
      */
     public double process(final double[] inputs)
     {
-        output = f.apply(z(inputs));
+        this.z = z(inputs);
+        output = f.apply(this.z);
         return output;
     }
+
+//    public double process(final double[] inputs, final boolean isInputNode)
+//    {
+//        return inputs;
+//    }
 
     public static void main(String[] args)
     {
@@ -83,9 +98,35 @@ public class Neuron
         return output;
     }
 
+    public double getZ()
+    {
+        return z;
+    }
+
+    public double[] getdJdW()
+    {
+        return dJdW;
+    }
+
+    public void setdJdW(final double[] dJdW)
+    {
+        this.dJdW = dJdW;
+    }
+
+    public double getdJdb()
+    {
+        return dJdb;
+    }
+
+    public void setdJdb(final double dJdb)
+    {
+        this.dJdb = dJdb;
+    }
+
     public void init(final int numFeatures)
     {
         this.weights = new double[numFeatures];
+        this.dJdW = new double[numFeatures];
         for (int i = 0; i < numFeatures; i++) {
             weights[i] = r.nextGaussian();
         }

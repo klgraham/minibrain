@@ -1,7 +1,6 @@
 package com.klgraham.minibrain.network;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.klgraham.minibrain.neuron.ActivationFunction;
@@ -18,7 +17,7 @@ public class Layer
      * Description of the layer.
      */
     private String description = "";
-    private List<Neuron> neurons;
+    private Neuron[] neurons;
 
     /**
      * Number of neurons in the layer.
@@ -32,13 +31,19 @@ public class Layer
 
     private ActivationFunction f;
     private double[] output;
+    private double[] deltas;
+    private double[] zs;
+    private boolean isInputLayer;
 
     private Layer(final int numberOfNeurons, final int numberOfInputs, ActivationFunction f)
     {
         this.numberOfNeurons = numberOfNeurons;
         this.numberOfInputs = numberOfInputs;
         this.f = f;
-        neurons = new ArrayList<>(numberOfNeurons);
+        neurons = new Neuron[numberOfNeurons];
+        deltas = new double[numberOfNeurons];
+        zs = new double[numberOfNeurons];
+        isInputLayer = false;
     }
 
     /**
@@ -48,14 +53,32 @@ public class Layer
      * @param f Activation function
      * @return Layer of neurons
      */
-    public static Layer build(final int numberOfNeurons, final int numberOfInputs, final int numberOfFeatures, ActivationFunction f)
+    public static Layer build(final int numberOfNeurons, final int numberOfInputs, ActivationFunction f)
     {
         Layer layer = new Layer(numberOfNeurons, numberOfInputs, f);
 
         IntStream.rangeClosed(1, numberOfNeurons).forEach(i -> {
             Neuron n = new Neuron(f);
             n.init(numberOfInputs);
-            layer.neurons.add(n);
+            layer.neurons[i-1] = n;
+        });
+        return layer;
+    }
+
+    /**
+     * Creates an input layer
+     * @param numberOfUnits Number of units in layer
+     * @return
+     */
+    public static Layer buildInputLayer(final int numberOfUnits)
+    {
+        Layer layer = new Layer(numberOfUnits, 1, ActivationFunction.IDENTITY);
+        layer.isInputLayer = true;
+
+        IntStream.rangeClosed(1, numberOfUnits).forEach(i -> {
+            Neuron n = new Neuron(ActivationFunction.IDENTITY);
+            n.init(numberOfUnits);
+            layer.neurons[i-1] = n;
         });
         return layer;
     }
@@ -93,16 +116,65 @@ public class Layer
     public double[] process(double[] inputs)
     {
         double[] outputs = new double[numberOfNeurons];
-        IntStream.range(0, numberOfNeurons).forEach(i -> {
-            Neuron n = neurons.get(i);
-            outputs[i] = n.process(inputs);
-        });
-        this.output = outputs;
+
+        if (!isInputLayer)
+        {
+            IntStream.range(0, numberOfNeurons).forEach(i -> {
+                Neuron n = neurons[i];
+                outputs[i] = n.process(inputs);
+                zs[i] = n.getZ();
+            });
+            this.output = outputs;
+        }
+        else
+        {
+            setOutput(inputs);
+        }
         return outputs;
     }
 
     public double[] getOutput() {
         return output;
+    }
+
+    public void setOutput(final double[] output)
+    {
+        if (isInputLayer)
+        {
+            this.output = output;
+        }
+    }
+
+    public double[] getDeltas()
+    {
+        return deltas;
+    }
+
+    public void setDeltas(final double[] deltas)
+    {
+        this.deltas = deltas;
+    }
+
+    public double[] getZs()
+    {
+        return zs;
+    }
+
+    public Optional<Neuron> getNeuron(int i)
+    {
+        if (isValidNeuronIndex(i))
+        {
+            return Optional.of(neurons[i]);
+        }
+        else
+        {
+            return Optional.empty();
+        }
+    }
+
+    private boolean isValidNeuronIndex(int i)
+    {
+        return i >= 0 && i < numberOfNeurons;
     }
 
     @Override
@@ -115,7 +187,7 @@ public class Layer
         double[] inputs = {1, 0, 1};
         double[] weights = {6, 2, 2};
         double bias = 10;
-        Layer layer = Layer.build(4, 3, 1, ActivationFunction.SIGMOID);
+        Layer layer = Layer.build(4, 3, ActivationFunction.SIGMOID);
 
         for (Neuron n : layer.neurons)
         {

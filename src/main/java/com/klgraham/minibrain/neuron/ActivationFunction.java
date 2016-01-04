@@ -42,4 +42,8 @@ public enum ActivationFunction
     Function<Double, Double> tanh = z -> (Math.exp(z) - Math.exp(-z)) / (Math.exp(z) + Math.exp(-z));
     Function<Double, Double> rectified = z -> Math.max(0, z);
     Function<Double, Double> identity = z -> z;
+
+    public static double derivative(Function<Double, Double> f, double z) {
+        return f.apply(z) * (1.0 - f.apply(z));
+    }
 }
