@@ -172,12 +172,13 @@ public class FeedForwardNeuralNetwork implements NeuralNetwork
         ActivationFunction[] activationFunctions = {ActivationFunction.SIGMOID, ActivationFunction.SIGMOID, ActivationFunction.IDENTITY};
         int[] neuronsInLayers = {3, 3, 1};
         FeedForwardNeuralNetwork network = FeedForwardNeuralNetwork.build(3, 3, activationFunctions, neuronsInLayers);
-        double[] inputs = {5, 6, 1};
+        double[][] data = {{5, 6, 1}, {1, -3, 12}};
+        double[] labels = {1, 6};
 
         // feedforward
-        double[] output = network.predict(inputs);
-        for (double d : output) System.out.println(d);
+//        double[] output = network.predict(inputs);
+//        for (double d : output) System.out.println(d);
 
-
+        network.train(data, labels);
     }
 }
