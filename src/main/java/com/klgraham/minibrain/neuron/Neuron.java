@@ -1,34 +1,41 @@
 package com.klgraham.minibrain.neuron;
 
-import Jama.Matrix;
-
 import java.util.Random;
 import java.util.function.Function;
 
+import Jama.Matrix;
+
 /**
- * A Neuron has N inputs, each of which is a vector of size K, and produces a single output value,
- * as determined by the activation function. For each input, there is a corresponding vector of weights.
  *
  * Created by klogram on 12/27/15.
  */
 public class Neuron
 {
     /**
-     * K x N matrix of weights. Each column contains the weight vector for the corresponding input vector.
+     * Column vector of N rows, representing weights between each input and this Neuron
      */
-    public double[][] weights;
+    public double[] weights;
 
+    /**
+     * Bias of neuron
+     */
+    public double bias;
+
+	/**
+     * Output of Neuron
+     */
     private double output;
 
     /**
      * Activation function h_{w,b}(x),
-     * where x = (x_0, ..., x_{N-1}), each x_i is a column matrix
+     * where x = (x_0, ..., x_{N-1})
      */
     private Function<Double, Double> f;
 
-    public Neuron(double[][] w, ActivationFunction f)
+    public Neuron(double[] w, double bias, ActivationFunction f)
     {
         this.weights = w;
+        this.bias = bias;
         this.f = f.get();
     }
 
@@ -36,33 +43,39 @@ public class Neuron
     {
         this.f = f.get();
         this.weights = null;
+        this.bias = 1.0;
     }
 
-    private double z(final double[][] inputs, final double bias)
+	/**
+     * Computes input to activation function
+     * @param inputs Column vector of N rows
+     * @return
+     */
+    private double z(final double[] inputs)
     {
-        Matrix x = new Matrix(inputs);
-        Matrix w = new Matrix(weights);
+        Matrix x = new Matrix(inputs, inputs.length);
+        Matrix w = new Matrix(weights, weights.length);
         return w.transpose().times(x).trace() + bias;
     }
 
     /**
      * Computes the output of the Neuron.
-     * @param inputs
+     * @param inputs Column vector of N rows.
      * @return Neuron's output value.
      */
-    public double process(final double[][] inputs, final double bias)
+    public double process(final double[] inputs)
     {
-        output = f.apply(z(inputs, bias));
+        output = f.apply(z(inputs));
         return output;
     }
 
     public static void main(String[] args)
     {
-        double[][] inputs = {{1, 0, 1}};
-        double[][] weights = {{6, 2, 2}};
+        double[] inputs = {1, 0, 1};
+        double[] weights = {6, 2, 2};
         double bias = 10;
-        Neuron neuron = new Neuron(weights, ActivationFunction.SIGMOID);
-        neuron.process(inputs, bias);
+        Neuron neuron = new Neuron(weights, bias, ActivationFunction.SIGMOID);
+        neuron.process(inputs);
         System.out.println(neuron.getOutput());
     }
 
@@ -70,17 +83,17 @@ public class Neuron
         return output;
     }
 
-    public void init(final int numInputs, final int numFeatures)
+    public void init(final int numFeatures)
     {
-        this.weights = new double[numFeatures][numInputs];
+        this.weights = new double[numFeatures];
         for (int i = 0; i < numFeatures; i++) {
-            for (int j = 0; j < numInputs; j++) {
-                weights[i][j] = r.nextGaussian();
-            }
+            weights[i] = r.nextGaussian();
         }
+        bias = epsilon * r.nextGaussian();
     }
 
     private Random r = new Random();
+    private double epsilon = 1.0e-4;
 
     public void setActivationFunction(ActivationFunction f) {
         this.f = f.get();

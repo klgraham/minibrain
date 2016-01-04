@@ -5,6 +5,6 @@ package com.klgraham.minibrain.network;
  */
 public interface NeuralNetwork
 {
-    double[] predict(final double[][] inputs, final double bias);
+    double[] predict(final double[] inputs);
     void train(final double[][] data, final double[] labels);
 }

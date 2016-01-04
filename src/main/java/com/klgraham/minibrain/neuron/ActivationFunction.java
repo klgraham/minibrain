@@ -7,7 +7,7 @@ import java.util.function.Function;
  */
 public enum ActivationFunction
 {
-    SIGMOID, TANH, STEP, RECTIFIED_LINEAR;
+    SIGMOID, TANH, STEP, RECTIFIED_LINEAR, IDENTITY;
 
     public Function<Double, Double> get()
     {
@@ -26,6 +26,9 @@ public enum ActivationFunction
             case RECTIFIED_LINEAR:
                 f = rectified;
                 break;
+            case IDENTITY:
+                f = identity;
+                break;
             default:
                 f = sigmoid;
                 break;
@@ -38,4 +41,5 @@ public enum ActivationFunction
     Function<Double, Double> step = z -> z > 0 ? 1.0 : 0;
     Function<Double, Double> tanh = z -> (Math.exp(z) - Math.exp(-z)) / (Math.exp(z) + Math.exp(-z));
     Function<Double, Double> rectified = z -> Math.max(0, z);
+    Function<Double, Double> identity = z -> z;
 }
