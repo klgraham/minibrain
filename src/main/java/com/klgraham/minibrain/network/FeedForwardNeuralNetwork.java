@@ -66,24 +66,28 @@ public class FeedForwardNeuralNetwork implements NeuralNetwork
         return layers[numberOfLayers - 1].getOutput();
     }
 
+    // todo: Add mini-batch training
+    // todo: Add training epochs
 	/**
      * Train the neural net
      * @param data Training examples. Each row is one training example
      * @param labels Training example labels. Corresponds to each row of data
+     * @param regularizationParameter
      */
     @Override
-    public void train(final double[][] data, final double[] labels)
+    public void train(final double[][] data, final double[] labels, final double regularizationParameter)
     {
         double alpha = 0.1;
         int N = labels.length;
 
         for (int n = 0; n < N; n++)
         {
-            gradientDescent(data[n], labels[n], alpha);
+            gradientDescent(data[n], labels[n], alpha, regularizationParameter);
         }
     }
 
-    private void gradientDescent(double[] x, double y, double alpha)
+    // todo: Add regularization
+    private void gradientDescent(double[] x, double y, double alpha, double lambda)
     {
         // feedforward
         double[] a = predict(x);
@@ -136,10 +140,11 @@ public class FeedForwardNeuralNetwork implements NeuralNetwork
             for (int i = 0; i < nextLayer.numberOfNeurons; i++)
             {
                 double d = deltasOfNextLayer[i];
-                double[] dJdW = nextLayer.getNeuron(i).get().getdJdW();
-                Neuron nNext = layer.getNeuron(i).get();
+                Neuron nNext = nextLayer.getNeuron(i).get();
+                double[] dJdW = nNext.getdJdW();
                 for (int j = 0; j < layer.numberOfNeurons; j++)
                 {
+                    Neuron n = layer.getNeuron(j).get();
                     dJdW[j] = aj[j] * d;
                 }
                 nNext.setdJdW(dJdW);

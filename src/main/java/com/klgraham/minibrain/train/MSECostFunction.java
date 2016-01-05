@@ -1,13 +1,14 @@
 package com.klgraham.minibrain.train;
 
-import com.klgraham.minibrain.neuron.ActivationFunction;
-
 import java.util.function.Function;
 
+import com.klgraham.minibrain.neuron.ActivationFunction;
+
 /**
+ * Mean-squared error cost function
  * Created by klogram on 12/28/15.
  */
-public class CostFunction
+public class MSECostFunction
 {
     /**
      * Number of training examples.
@@ -25,7 +26,7 @@ public class CostFunction
     double weightDecayParameter;
     Function<Double, Double> f;
 
-    public CostFunction(int numberOfExamples, int numberOfFeatures, double[][] weights, ActivationFunction f, double weightDecayParameter)
+    public MSECostFunction(int numberOfExamples, int numberOfFeatures, double[][] weights, ActivationFunction f, double weightDecayParameter)
     {
         this.numberOfExamples = numberOfExamples;
         this.numberOfFeatures = numberOfFeatures;
@@ -34,6 +35,7 @@ public class CostFunction
         this.weightDecayParameter = weightDecayParameter;
     }
 
+    // todo add regularization
     public double compute(double[][] x, double[] y, double bias)
     {
         double costSum = 0;
