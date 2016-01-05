@@ -184,6 +184,6 @@ public class FeedForwardNeuralNetwork implements NeuralNetwork
 //        double[] output = network.predict(inputs);
 //        for (double d : output) System.out.println(d);
 
-        network.train(data, labels);
+        network.train(data, labels, 0);
     }
 }
